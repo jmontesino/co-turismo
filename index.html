@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubre Colombia - Historia en QR</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f3f4f6;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .card-zoom:hover img {
+            transform: scale(1.1);
+        }
+        .card-zoom img {
+            transition: transform 0.5s ease;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FCD34D; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F59E0B; 
+        }
+        
+        /* Animation for modal */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-animate {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-map-location-dot text-yellow-500 text-2xl"></i>
+                <span class="text-2xl font-bold text-gray-800 tracking-wide">Colombia<span class="text-yellow-500">QR</span></span>
+            </div>
+            <div class="hidden md:flex space-x-6 text-sm font-semibold text-gray-600">
+                <a href="#" class="hover:text-yellow-600 transition">Destinos</a>
+                <a href="#" class="hover:text-blue-600 transition">Gastronomía</a>
+                <a href="#" class="hover:text-red-600 transition">Historia</a>
+            </div>
+            <button class="md:hidden text-gray-600 text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-96 flex items-center justify-center overflow-hidden bg-slate-900">
+        <!-- Fallback background color/image logic via JS below, but strictly CSS gradient here -->
+        <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 via-blue-500 to-red-500 opacity-20 z-0"></div>
+        <img src="https://images.unsplash.com/photo-1596319682968-c8d4875a6f17?q=80&w=2070&auto=format&fit=crop" alt="Colombia Landscape" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">Explora Colombia</h1>
+            <p class="text-xl text-gray-100 max-w-2xl mx-auto drop-shadow-md">
+                Escanea los códigos QR para sumergirte en la historia y los secretos de nuestros paraísos.
+            </p>
+            <a href="#destinos" class="mt-8 inline-block bg-yellow-400 text-gray-900 font-bold py-3 px-8 rounded-full hover:bg-yellow-300 transition shadow-lg transform hover:-translate-y-1">
+                Ver Destinos
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="destinos" class="container mx-auto px-6 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Destinos Imperdibles</h2>
+            <div class="w-24 h-1 bg-yellow-400 mx-auto"></div>
+            <p class="mt-4 text-gray-600">Selecciona un lugar para generar su pasaporte digital.</p>
+        </div>
+
+        <!-- Grid de Tarjetas -->
+        <div id="places-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Las tarjetas se generan con JavaScript aquí -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="mb-4 text-gray-400">Hecho con <i class="fa-solid fa-heart text-red-500"></i> y café colombiano.</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fa-brands fa-instagram text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fa-brands fa-twitter text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fa-brands fa-facebook text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal QR -->
+    <div id="qrModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden modal-animate relative">
+            
+            <!-- Header Modal -->
+            <div class="bg-gradient-to-r from-yellow-400 to-orange-400 p-6 text-center relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-white hover:text-gray-200 transition text-2xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <h3 id="modalTitle" class="text-2xl font-bold text-white drop-shadow-md">Nombre Lugar</h3>
+                <p class="text-yellow-100 text-sm mt-1"><i class="fa-solid fa-location-dot mr-1"></i> <span id="modalLocation">Ubicación</span></p>
+            </div>
+
+            <!-- Body Modal -->
+            <div class="p-8 flex flex-col items-center text-center">
+                <div class="bg-white p-4 rounded-xl shadow-inner border border-gray-200 mb-6">
+                    <div id="qrcode"></div>
+                </div>
+                
+                <p class="text-gray-600 text-sm mb-6">
+                    Abre la cámara de tu celular y escanea este código para leer la <strong>historia completa, horarios y precios</strong> de este lugar.
+                </p>
+
+                <div class="w-full grid grid-cols-2 gap-4">
+                    <button onclick="closeModal()" class="bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium">
+                        Cerrar
+                    </button>
+                    <a id="directLink" href="#" target="_blank" class="bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium flex items-center justify-center gap-2">
+                        <span>Ir al sitio</span> <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Base de datos de lugares turísticos
+        const places = [
+            {
+                id: 1,
+                name: "Valle del Cocora",
+                location: "Salento, Quindío",
+                description: "Hogar del árbol nacional de Colombia, la Palma de Cera. Un paisaje surrealista entre nubes y montañas verdes.",
+                image: "https://images.unsplash.com/photo-1531968455001-5c5272a41129?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Valle_del_Cocora"
+            },
+            {
+                id: 2,
+                name: "Cartagena de Indias",
+                location: "Bolívar",
+                description: "La joya del Caribe. Ciudad amurallada llena de historia colonial, castillos y calles coloridas.",
+                image: "https://images.unsplash.com/photo-1583531352515-8884af319dc1?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Cartagena_de_Indias"
+            },
+            {
+                id: 3,
+                name: "Santuario de Las Lajas",
+                location: "Ipiales, Nariño",
+                description: "Una basílica neogótica construida en el interior del cañón del río Guáitara. Un milagro arquitectónico.",
+                image: "https://images.unsplash.com/photo-1590613683355-6769c883b02d?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Santuario_de_Las_Lajas"
+            },
+            {
+                id: 4,
+                name: "Piedra del Peñol",
+                location: "Guatapé, Antioquia",
+                description: "Un monolito de 220 metros de altura con 740 escalones. Ofrece una de las mejores vistas del mundo.",
+                image: "https://images.unsplash.com/photo-1591504772893-2b4e168d6758?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Piedra_del_Pe%C3%B1ol"
+            },
+            {
+                id: 5,
+                name: "Parque Tayrona",
+                location: "Santa Marta, Magdalena",
+                description: "Donde la selva se encuentra con el mar Caribe. Playas cristalinas, naturaleza virgen y cultura indígena.",
+                image: "https://images.unsplash.com/photo-1581276879432-15e50529f34b?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Parque_nacional_natural_Tayrona"
+            },
+            {
+                id: 6,
+                name: "Caño Cristales",
+                location: "La Macarena, Meta",
+                description: "El río de los cinco colores. Un espectáculo natural único producido por plantas acuáticas endémicas.",
+                image: "https://images.unsplash.com/photo-1635440657665-73c75f509157?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Ca%C3%B1o_Cristales"
+            },
+            {
+                id: 7,
+                name: "Monserrate",
+                location: "Bogotá D.C.",
+                description: "Cerro tutelar de la capital. Un lugar de peregrinación con la mejor vista panorámica de Bogotá.",
+                image: "https://images.unsplash.com/photo-1572697180586-921f323b5321?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Cerro_de_Monserrate"
+            },
+            {
+                id: 8,
+                name: "Desierto de la Tatacoa",
+                location: "Huila",
+                description: "Un bosque seco tropical con formaciones rocosas ocres y grises. Ideal para la observación astronómica.",
+                image: "https://images.unsplash.com/photo-1534963067223-c3878400662c?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Desierto_de_la_Tatacoa"
+            },
+            {
+                id: 9,
+                name: "Ciudad Perdida",
+                location: "Sierra Nevada",
+                description: "Teyuna, un antiguo poblado indígena tairona escondido en la selva, más antiguo que Machu Picchu.",
+                image: "https://images.unsplash.com/photo-1583429602000-62e6a2715c4b?q=80&w=1000&auto=format&fit=crop",
+                url: "https://es.wikipedia.org/wiki/Ciudad_Perdida"
+            }
+        ];
+
+        // Renderizar las tarjetas
+        const grid = document.getElementById('places-grid');
+
+        places.forEach(place => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col';
+            
+            card.innerHTML = `
+                <div class="h-48 overflow-hidden card-zoom relative group">
+                    <img src="${place.image}" alt="${place.name}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition"></div>
+                    <div class="absolute top-4 right-4 bg-white text-gray-800 text-xs font-bold px-2 py-1 rounded shadow">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-800 leading-tight">${place.name}</h3>
+                    </div>
+                    <p class="text-sm text-yellow-600 font-semibold mb-3"><i class="fa-solid fa-location-dot mr-1"></i> ${place.location}</p>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">${place.description}</p>
+                    
+                    <button onclick="openQR('${place.name}', '${place.location}', '${place.url}')" 
+                        class="w-full bg-gray-900 text-white py-3 rounded-xl font-semibold hover:bg-yellow-500 hover:text-gray-900 transition duration-300 flex items-center justify-center gap-2 group">
+                        <i class="fa-solid fa-qrcode group-hover:scale-110 transition"></i>
+                        <span>Ver Historia y QR</span>
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // Lógica del Modal y QR
+        const modal = document.getElementById('qrModal');
+        const qrContainer = document.getElementById('qrcode');
+        
+        function openQR(name, location, url) {
+            // Actualizar textos
+            document.getElementById('modalTitle').innerText = name;
+            document.getElementById('modalLocation').innerText = location;
+            document.getElementById('directLink').href = url;
+            
+            // Limpiar QR anterior
+            qrContainer.innerHTML = "";
+            
+            // Generar nuevo QR
+            new QRCode(qrContainer, {
+                text: url,
+                width: 200,
+                height: 200,
+                colorDark : "#1F2937", // Gris oscuro de Tailwind
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            // Mostrar modal
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        // Cerrar modal al hacer clic fuera
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Cerrar con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
