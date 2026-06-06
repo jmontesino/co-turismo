@@ -1,4 +1,4 @@
-name: Analisis de codigo
+name: Build
 on:
  push:
    branches:
@@ -20,6 +20,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=<co-turismo>
+            -Dsonar.projectKey=co-turismo
             -Dsonar.organization=jmontesino
             -Dsonar.sources=.
